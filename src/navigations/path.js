@@ -4,7 +4,7 @@ const PATH_AUTH = {
 
 }
 const PATH_HOME = {
-
+    dashboard: 'dashboard',
 }
 
 export { PATH_AUTH, PATH_HOME }
