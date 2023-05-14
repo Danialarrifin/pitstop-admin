@@ -15,7 +15,14 @@ export default function Login() {
         "/auth/login",
         {  email, password: pwd }
       );
-      console.log('response login', response.data);
+      console.log('response login', response.data, response.data?.access_token);
+
+      // set access token if exists
+      if(response.data?.access_token) {
+        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data?.access_token}`;
+        localStorage.setItem('token', JSON.stringify(response.data?.access_token));
+      }
+
       setSuccess(true);
       //clear state and controlled inputs
       setPwd("");
