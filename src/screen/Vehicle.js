@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
 import { HiCog, HiUsers } from "react-icons/hi";
 import Footer from 'components/Footer'
@@ -7,26 +7,30 @@ import Navbar from 'components/Navbar'
 import axios from 'utils/axios'
 
 export default function Vehicle() {
-  const [Data,setData] =useState([]);
-  const GetVehicleData = () => {
-    //here will get all vehicle data
-    const url = 'http://localhost:3001/vehicle'
-    axios.get(url)
-    .then(response=>{
-      const result = response.data;
-      const {status, message, data}= result;
-      if(status !== 'SUCCESS'){
-        alert(message,status)
-      }
-      else{
-        setData(data)
-        console.log(data)
-      }
-    })
-    .catch(err =>{
-      console.log(err)
-    })
+  const [vehicle, setVehicle] = useState([]);
+
+  const getAllVehicle = async()=>{
+    try {
+      const response = await axios.get(
+        "/vehicles",
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          }
+        }
+      );
+      console.log('response vehicle', response.data);
+      if(response.data.length > 0)
+        setVehicle(response.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    getAllVehicle();
+  },[]);
   return (
     <>
       <Navbar />
@@ -42,63 +46,45 @@ export default function Vehicle() {
                     <tr>
                       <th className='p-3 w-10  text-sm font-semibold tracking-wide text-left'>MANUFACTURER</th>
                       <th className='p-3 w-10 text-sm font-semibold tracking-wide text-left'>MODEL</th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>PLATE NUMBER </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>IMAGE PATH </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'></th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'> </th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>PLATE NUMBER </th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>IMAGE PATH </th>
+                      <th className='p-3  text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
+                      <th className='p-3  text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>edit</th>
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
-                          {Data.map((item) =>
-                          <tr key={item._id}>
-                            <td>{item.manufacturer}</td>
-                            <td>{item.model}</td>
-                            <td>{item.plate_num}</td>
-                            <td>{item.image_path}</td>
-                            <td>{item.created_at}</td>
-                            <td>{item.updated_at}</td>
-                          </tr>
-                          )}
+                    {vehicle.map(item => (
+                      <tr>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.manufacturer}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.model}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.plate_num}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.image_path}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3">
+                          Edit
+                        </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Delete
+                          </button></td>
+                      </tr>
+                    ))
+                    }
                   </tbody>
                 </table>
               </div>
-
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
+                {vehicle.map(item => (
                 <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
                   <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>1</a>
-                    </div>
-                    <div>Perodua Myvi</div>
-                    <div>VHL9808</div>
+                    <div>{item.manufacturer}</div>
+                    <div>{item.model}</div>
                   </div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
+                  <div>{item.plate_num}</div>
+                  <div className='text-gray-500'>{item.created_at}</div>
+                  <div className='text-gray-500'>{item.updated_at}</div>
                 </div>
-                <div className='bg-white space-y-4-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>2</a>
-                    </div>
-                    <div>Suzuki Swift</div>
-                    <div>WWF1738</div>
-                  </div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
-                </div>
-                <div className='bg-white space-y-4-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>3</a>
-                    </div>
-                    <div>BMW X5</div>
-                    <div>VIP3015</div>
-                  </div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
