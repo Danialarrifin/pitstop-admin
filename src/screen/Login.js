@@ -1,15 +1,34 @@
 import { useNavigate } from "react-router-dom";
-import React, {useState} from "react";
-import useAuth from 'hooks/useAuth';
+import { useState } from "react";
+import axios from "../utils/axios";
+
 
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const handleLogin = () => {
+  const handleLogin = async(e) => {
     // navigate("/dashboard");
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "/auth/login",
+        {  email, password: pwd }
+      );
+      console.log('response login', response.data);
+      setSuccess(true);
+      //clear state and controlled inputs
+      setPwd("");
+      setEmail("");
+      navigate('/dashboard');
+    } catch (err) {
+      console.log(err);
+    }
   }
-  const { login } = useAuth();
+
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
+  const [success, setSuccess] = useState(false);
   return (
     <>
 
@@ -35,7 +54,9 @@ export default function Login() {
                   id="email"
                   name="email"
                   type="email"
-                  autoComplete="email"
+                  autoComplete="off"
+                  onChange={(e) => setEmail(e.target.value)}
+                  value={email}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -58,7 +79,8 @@ export default function Login() {
                   id="password"
                   name="password"
                   type="password"
-                  autoComplete="current-password"
+                  onChange={(e) => setPwd(e.target.value)}
+                  value={pwd}
                   required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
