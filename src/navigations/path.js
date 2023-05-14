@@ -2,6 +2,9 @@ const PATH_AUTH = {
     login: 'login',
     register: 'register',
     error: 'error',
+    changepassword: 'change-password',
+    forgotpassword: 'forgot-password',
+    resetpassword: 'reset-password',
 
 }
 const PATH_HOME = {
@@ -11,8 +14,8 @@ const PATH_HOME = {
     appointment: 'appointment',
     workshop: 'workshop',
     report: 'report',
-    sidebar: 'sidebar',
-    navbar: 'navbar',
+    profile: 'profile',
+
 }
 
 export { PATH_AUTH, PATH_HOME }

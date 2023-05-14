@@ -9,8 +9,11 @@ import AppointmentScreen from '../screen/Appointment';
 import WorkshopScreen from '../screen/Workshop';
 import ReportScreen from '../screen/Report';
 import ErrorScreen from '../screen/Error';
-import SidebarScreen from '../screen/Sidebar';
-import NavbarScreen from '../screen/Navbar'
+import ProfileScreen from '../screen/Profile';
+import ChangePasswordScreen from '../screen/ChangePassword'
+import ForgotPasswordScreen from '../screen/ForgotPassword'
+import ResetPasswordScreen from '../screen/ResetPassword'
+
 
 
 
@@ -31,11 +34,13 @@ const app = () => {
             <Route path={PATH_HOME.appointment} element={<AppointmentScreen />} />
             <Route path={PATH_HOME.workshop} element={<WorkshopScreen />} />
             <Route path={PATH_HOME.report} element={<ReportScreen />} />
-            <Route path={PATH_HOME.sidebar} element={<SidebarScreen />} />
-            <Route path={PATH_HOME.navbar} element={<NavbarScreen />} />
-           
-        
+            <Route path={PATH_HOME.profile} element={<ProfileScreen />} />
+            <Route path={PATH_AUTH.changepassword} element={<ChangePasswordScreen />} />
+            <Route path={PATH_AUTH.forgotpassword} element={<ForgotPasswordScreen />} />
+            <Route path={PATH_AUTH.resetpassword} element={<ResetPasswordScreen />} />
 
+           
+           
             {/* } */}
         </Routes>
     )
