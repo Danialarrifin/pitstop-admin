@@ -9,7 +9,7 @@ import axios from 'utils/axios'
 export default function Vehicle() {
   const [vehicle, setVehicle] = useState([]);
 
-  const getAllVehicle = async()=>{
+  const getAllVehicle = async () => {
     try {
       const response = await axios.get(
         "/vehicles",
@@ -20,7 +20,7 @@ export default function Vehicle() {
         }
       );
       console.log('response vehicle', response.data);
-      if(response.data.length > 0)
+      if (response.data.length > 0)
         setVehicle(response.data);
     } catch (err) {
       console.log(err);
@@ -30,7 +30,7 @@ export default function Vehicle() {
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
     getAllVehicle();
-  },[]);
+  }, []);
   return (
     <>
       <Navbar />
@@ -50,7 +50,7 @@ export default function Vehicle() {
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>IMAGE PATH </th>
                       <th className='p-3  text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3  text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>edit</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>Edit and Delete</th>
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
@@ -75,15 +75,15 @@ export default function Vehicle() {
               </div>
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
                 {vehicle.map(item => (
-                <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>{item.manufacturer}</div>
-                    <div>{item.model}</div>
+                  <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+                    <div className='flex items-center space-x-2 text-sm'>
+                      <div>{item.manufacturer}</div>
+                      <div>{item.model}</div>
+                    </div>
+                    <div>{item.plate_num}</div>
+                    <div className='text-gray-500'>{item.created_at}</div>
+                    <div className='text-gray-500'>{item.updated_at}</div>
                   </div>
-                  <div>{item.plate_num}</div>
-                  <div className='text-gray-500'>{item.created_at}</div>
-                  <div className='text-gray-500'>{item.updated_at}</div>
-                </div>
                 ))}
               </div>
             </div>
