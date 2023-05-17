@@ -1,12 +1,36 @@
+import React, { useEffect, useState } from 'react';
 import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
 import { HiCog, HiUsers } from "react-icons/hi";
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
-
+import axios from 'utils/axios'
 
 export default function Appointment() {
+  const [appointment, setAppointment] = useState([]);
 
+  const getAllAppointment = async () => {
+    try {
+      const response = await axios.get(
+        "/appointments",
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          }
+        }
+      );
+      console.log('response vehicle', response.data);
+      if (response.data.length > 0)
+        setAppointment(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    getAllAppointment();
+  }, []);
   return (
     <>
       <Navbar />
@@ -21,7 +45,6 @@ export default function Appointment() {
                 <table className='w-full'>
                   <thead className='bg-gray-50 border-b-2 border-gray-200'>
                     <tr>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>ID </th>
                       <th className='p-3 w-10  text-sm font-semibold tracking-wide text-left'>DATE</th>
                       <th className='p-3 w-10 text-sm font-semibold tracking-wide text-left'>TIME SLOT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>VEHICLE </th>
@@ -29,104 +52,53 @@ export default function Appointment() {
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>STATUS </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
+                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>EDIT </th>
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
-                    <tr className='bg-white'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>1</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>23/3/2023</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>11.00-12.30</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Perodua Myvi</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Flat Tyre, Oil Change</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
-                        <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-green-800 bg-green-200 rounded-lg bg-opacity-40'>Accept</span>
-                      </td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/2/8</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/14/5</td>
-                    </tr>
-                    <tr className='bg-gray'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>29/3/2023</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>4.30-6.00</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Suzuki Swift</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Engine Overhaul</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
-                        <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-red-800 bg-red-200 rounded-lg bg-opacity-40'>Reject</span>
-                      </td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/2/8</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/14/10</td>
-                    </tr>
-                    <tr className='bg-white'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>3</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>15/4/2023</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>10.00-12.00</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>BMW X5</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Brakepad Change</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
-                        <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-gray-800 bg-gray-200 rounded-lg bg-opacity-40'>Pending</span>
-                      </td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/5/8</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/9/5</td>
-                    </tr>
+                    {appointment.map(item => (
+                      <tr className='bg-white'>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.date}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.time_slot_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.vehicle_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.service_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
+                          <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-gray-800 bg-gray-200  rounded-lg bg-opacity-40'>{item.status}</span>
+                        </td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3">
+                          Edit
+                        </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Delete
+                          </button></td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
+                {appointment.map(item =>(
                 <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
                   <div className='flex items-center space-x-2 text-sm'>
                     <div>
                       <a href='#' className='text-lue-500 font-bold hover:underline'>1</a>
                     </div>
-                    <div className='font-bold'>Perodua Myvi</div>
+                    <div className='font-bold'>{item.vehicle_id}</div>
                   </div>
-                  <div>Flat Tyre, Oil Change</div>
+                  <div>{item.service_id}</div>
                   <div className='flex items-center space-x-2 text-sm'>
-                    <div>23/3/2023 </div>
-                    <div>11.00-12.30 </div>
+                    <div>{item.date} </div>
+                    <div>{item.time_slot_id}</div>
                   </div>
                   <div>
                     <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-green-800 bg-green-200 rounded-lg bg-opacity-40'>Accept</span>
                   </div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
+                  <div className='text-gray-500'>{item.created_at}</div>
+                  <div className='text-gray-500'>{item.updated_at}</div>
                 </div>
-                <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>2</a>
-                    </div>
-                    <div className='font-bold'>Suzuki Swift </div>
-                  </div>
-                  <div>Engine Overhaul</div>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>29/3/2023 </div>
-                    <div>4.30-6.00 </div>
-                  </div>
-                  <div>
-                    <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-red-800 bg-red-200 rounded-lg bg-opacity-40'>Reject</span>
-                  </div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
-                </div>
-                <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>3</a>
-                    </div>
-                    <div className='font-bold'>BMW X5</div>
-                  </div>
-                  <div>Brakepad Change</div>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>23/3/2023 </div>
-                    <div>10.00-12.00 </div>
-                  </div>
-                  <div>
-                    <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-gray-800 bg-gray-200 rounded-lg bg-opacity-40'>Pending</span>
-                  </div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
