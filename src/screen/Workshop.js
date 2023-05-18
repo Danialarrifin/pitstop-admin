@@ -20,7 +20,7 @@ export default function Workshop() {
           }
         }
       );
-      console.log('response vehicle', response.data);
+      console.log('response workshop', response.data);
       if (response.data.length > 0)
         setWorkshop(response.data);
     } catch (err) {
@@ -51,7 +51,7 @@ export default function Workshop() {
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>ROAD ASSISTANCE </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>Edit </th>
+                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>EDIT & DELETE </th>
 
                     </tr>
                   </thead>
