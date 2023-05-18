@@ -52,7 +52,7 @@ export default function Appointment() {
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>STATUS </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>EDIT </th>
+                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>EDIT & DELETE </th>
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>

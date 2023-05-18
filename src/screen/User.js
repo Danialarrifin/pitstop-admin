@@ -26,8 +26,7 @@ export default function User() {
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>PASSWORD </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'> </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'> </th>
+                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'> EDIT & DELETE </th>
 
                     </tr>
                   </thead>
@@ -39,8 +38,11 @@ export default function User() {
                       <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>12234456</td>
                       <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/2/8</td>
                       <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/14/5</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>skhfiu</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/14/5</td>
+                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3">
+                          Edit
+                        </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            Delete
+                          </button></td>
 
                     </tr>
                     <tr className='bg-gray'>

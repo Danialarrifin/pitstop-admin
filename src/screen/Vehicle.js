@@ -50,7 +50,7 @@ export default function Vehicle() {
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>IMAGE PATH </th>
                       <th className='p-3  text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3  text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>Edit and Delete</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>EDIT & DELETE</th>
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
