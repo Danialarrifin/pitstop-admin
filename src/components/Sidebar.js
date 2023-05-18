@@ -151,7 +151,7 @@ export default function Sidebar() {
                                     />
                                 </svg> */}
                                 <FaFileInvoice className="w-6 h-6"/>
-                                {!open ? <span className="text-gray-100" >Generate Report</span> : null}
+                                {!open ? <span className="text-gray-100" >Transactions Report</span> : null}
                             </a>
                         </li>
                     </ul>
