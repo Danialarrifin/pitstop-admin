@@ -2,8 +2,6 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "../utils/axios";
 
-
-
 export default function Login() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -19,8 +17,8 @@ export default function Login() {
 
       // set access token if exists
       if(response.data?.access_token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${response.data?.access_token}`;
-        localStorage.setItem('token', JSON.stringify(response.data?.access_token));
+        axios.defaults.headers.common.Authorization = `Bearer ${response?.data?.access_token}`;
+        localStorage.setItem('token', JSON.stringify(response?.data?.access_token));
       }
 
       setSuccess(true);
