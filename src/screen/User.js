@@ -3,10 +3,35 @@ import { HiCog, HiUsers } from "react-icons/hi";
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
-import React, {Button} from 'react';
+import React, {useEffect, useState} from 'react';
+import axios from 'utils/axios'
+
 
 export default function User() {
-  
+  const [user, setUser] = useState([]);
+
+  const getAllUser = async () => {
+    try {
+      const response = await axios.get(
+        "/Users",
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          }
+        }
+      );
+      console.log('response user', response.data);
+      if (response.data.length > 0)
+        setUser(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  // Similar to componentDidMount and componentDidUpdate:
+  useEffect(() => {
+    getAllUser();
+  }, []);
   return (
     <>
       <Navbar />
@@ -20,85 +45,39 @@ export default function User() {
                 <table className='w-full'>
                   <thead className='bg-gray-50 border-b-2 border-gray-200'>
                     <tr>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>ID </th>
-                      <th className='p-3 w-10  text-sm font-semibold tracking-wide text-left'>EMAIL</th>
-                      <th className='p-3 w-10 text-sm font-semibold tracking-wide text-left'>NAME</th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>PASSWORD </th>
+                      <th className='p-3 w-10  text-sm font-semibold tracking-wide text-left'>NAME</th>
+                      <th className='p-3 w-10 text-sm font-semibold tracking-wide text-left'>EMAIL</th>
+                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>ROLE </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'> EDIT & DELETE </th>
-
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
+                    {user.map(item => (
                     <tr className='bg-white'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>1</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>danialarrifin29@testing.com</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Muhamad Danial</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>12234456</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/2/8</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/14/5</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3">
-                          Edit
-                        </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                            Delete
-                          </button></td>
-
+                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.name}</td>
+                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'> {item.email}</td>
+                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.role}</td>
+                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
+                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
                     </tr>
-                    <tr className='bg-gray'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>haiqalgerrard@testing.com</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Haiqal gerrard</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>178902</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/2/8</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/14/10</td>
-                    </tr>
-                    <tr className='bg-white'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>3</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>ammarocan11@testing.com</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>Muhamad rocan</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>12239349456</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/5/8</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>2023/9/5</td>
-                    </tr>
+                     ))}
                   </tbody>
                 </table>
               </div>
 
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
+                {user.map(item =>(
                 <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
                   <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>1</a>
-                    </div>
-                    <div>Muhamad Danial</div>                   
+                    <div>{item.name}</div>                   
                   </div>
-                  <div>danialarrifin29@testing.com</div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
+                  <div>{item.email}</div>
+                  <div>{item.role}</div>
+                  <div className='text-gray-500'>{item.created_at}</div>
+                  <div className='text-gray-500'>{item.updated_at}</div>
                 </div>
-                <div className='bg-white space-y-4-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>2</a>
-                    </div>
-                    <div>Haiqal Gerrard</div>                
-                  </div>
-                  <div>haiqalgerrard@testing.com</div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
-                </div>
-                <div className='bg-white space-y-4-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>3</a>
-                    </div>
-                    <div>Muhamad Rocan</div>
-                  </div>
-                  <div>ammarocan11@testing.com</div>
-                  <div className='text-gray-500'>2023/3/4</div>
-                  <div className='text-gray-500'>2023/7/6</div>
-                </div>
+                 ))}
               </div>
             </div>
           </div>
