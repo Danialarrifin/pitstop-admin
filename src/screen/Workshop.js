@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
-import { HiCog, HiUsers } from "react-icons/hi";
+import { } from 'react-icons/ai'
+import { } from "react-icons/hi";
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
@@ -13,7 +13,69 @@ export default function Workshop() {
   const [viewMode, setViewMode] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [name, setName] = useState(null);
+  const [contactNum, setContactNum] = useState(null);
+  const [address, setAddress] = useState(null);
+  const [roadAssistance, setRoadAssistance] = useState(null);
 
+
+
+  const handleEventChange = (event) => {
+    console.log('event', event.target.name);
+    switch (event.target.name) {
+      case 'name':
+        setName(event.target.value);
+        break;
+
+      case 'contact_num':
+        setContactNum(event.target.value);
+        break;
+
+      case 'address':
+        setAddress(event.target.value);
+        break;
+
+      case 'road_assistance':
+        setRoadAssistance(event.target.value);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const resetForm = () => {
+    console.log('resetForm');
+    setName(null);
+    setContactNum(null);
+    setAddress(null);
+    setRoadAssistance(null);
+    setSelectedItem(null);
+    setShowModal(false);
+    setViewMode(false);
+  };
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    const data = {
+      name,
+      contact_num: contactNum,
+      address_id: address,
+      road_assistance_enabled: roadAssistance,
+    };
+
+    console.log('data', data);
+    if (selectedItem) {
+      // TODO: call update api
+      await updateWorkshop(selectedItem?.id, data);
+    }
+    else {
+      // TODO: call add api
+      await addWorkshop(selectedItem?.id, data);
+    }
+    setShowModal(false);
+    // await getAllWorkshop();
+  };
 
   const submitWorkshopDeletion = async (id) => {
     console.log(id);
@@ -26,7 +88,7 @@ export default function Workshop() {
           }
         }
       );
-      console.log('response appointment', response.data);
+      console.log('response workshop', response.data);
       setShowDeleteModal(false);
       setSelectedItem();
       await getAllWorkshop();
@@ -36,6 +98,46 @@ export default function Workshop() {
       setSelectedItem();
     }
   };
+
+  const updateWorkshop = async (id, data) => {
+    try {
+      const response = await axios.post(
+        `/workshops/update?WorkshopId=${id}`,
+        data,
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          },
+        },
+      );
+      console.log('response workshop', response.data);
+      setSelectedItem();
+      await getAllWorkshop();
+    } catch (err) {
+      console.log(err);
+      setSelectedItem();
+    }
+  }
+
+  const addWorkshop = async (id, data) => {
+    try {
+      const response = await axios.post(
+        `/workshops`,
+        data,
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          },
+        },
+      );
+      console.log('response workshop', response.data);
+
+      await getAllWorkshop();
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
 
   const getAllWorkshop = async () => {
     try {
@@ -66,9 +168,158 @@ export default function Workshop() {
         <div className="flex">
           <Sidebar />
           <div className='p-5 w-full'>
-            <h1 className='text-xl mb-2 font-bold'>Workshops</h1>
+            <div className='flex justify-between'>
+              <h1 className='text-xl mb-2 font-bold'>Workshops</h1>
+              <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-5 "
+                onClick={() => {
+                  setShowModal(true);
+                }}>
+                Add Workshops
+              </button>
+            </div>
+
             <div className='overlow-auto rounded-lg shadow'>
-            {showDeleteModal ? (
+              {showModal ? (
+                <>
+                  <div className='flex justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
+                    <div className='relative w-full mx-6 md:mx-0 md:w-4/5 lg:w-3/5 my-6 mx-auto max-w-6xl h-5/6 overflow-y-auto'>
+                      <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
+                        <div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
+                          <h3 className='text-3xl font-semibold'>
+                            {viewMode
+                              ? 'Workshop Detail'
+                              : selectedItem
+                                ? 'Edit Workshop'
+                                : 'Add Workshop'}
+                          </h3>
+                          <button
+                            className='p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
+                            onClick={() => setShowModal(false)}
+                          >
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              strokeWidth={1.5}
+                              stroke='currentColor'
+                              className='w-6 h-6'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M6 18L18 6M6 6l12 12'
+                              />
+                            </svg>
+                          </button>
+                        </div>
+
+                        <div className='relative p-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Name
+                          </label>
+                          <input
+                            type='text'
+                            name='name'
+                            id='name'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Name'
+                            onChange={handleEventChange}
+                            value={name}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Contact Number
+                          </label>
+                          <input
+                            type='text'
+                            name='contact_num'
+                            id='contact_num'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Contact Number'
+                            onChange={handleEventChange}
+                            value={contactNum}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Address
+                          </label>
+                          <input
+                            type='text'
+                            name='address'
+                            id='address'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Address'
+                            onChange={handleEventChange}
+                            value={address}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Road Assistance
+                          </label>
+                          <input
+                            type='text'
+                            name='road_assistance'
+                            id='road_assistance'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Yes or No'
+                            onChange={handleEventChange}
+                            value={roadAssistance}
+                          />
+                        </div>
+
+                        <div className='flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b'>
+                          <button
+                            className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
+                            type='button'
+                            onClick={() => resetForm()}
+                          >
+                            Close
+                          </button>
+                          {!viewMode ? (
+                            <button
+                              className='bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
+                              type='button'
+                              onClick={submitForm}
+                            >
+
+                              {selectedItem ? (
+                                'Update'
+                              ) : (
+                                'Create'
+                              )}
+
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='opacity-50 fixed inset-0 z-40 bg-black'></div>
+                </>
+              ) : null}
+              {showDeleteModal ? (
                 <>
                   <div className='fixed inset-0 z-10 overflow-y-auto'>
                     <div
@@ -143,23 +394,31 @@ export default function Workshop() {
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
                     {workshop.map(item => (
-                    <tr className='bg-white'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.name}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.contact_num}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.address_id}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.road_assistance_enabled}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3">
+                      <tr className='bg-white'>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.name}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.contact_num}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.address_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.road_assistance_enabled}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3"
+                          onClick={() => {
+                            setShowModal(true);
+                            setSelectedItem(item);
+                            setName(item.name);
+                            setContactNum(item.contact_num);
+                            setAddress(item.address_id);
+                            setRoadAssistance(item.road_assistance_enabled);
+                          }}>
                           Edit
                         </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                         onClick={() => {
-                          setShowDeleteModal(true);
-                          setSelectedItem(item);
-                        }}>
+                          onClick={() => {
+                            setShowDeleteModal(true);
+                            setSelectedItem(item);
+                          }}>
                             Delete
                           </button></td>
-                    </tr>
+                      </tr>
                     ))
                     }
                   </tbody>
@@ -168,18 +427,18 @@ export default function Workshop() {
 
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
                 {workshop.map(item => (
-                <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div>
-                      <a href='#' className='text-lue-500 font-bold hover:underline'>1</a>
+                  <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+                    <div className='flex items-center space-x-2 text-sm'>
+                      <div>
+                        <a href='#' className='text-lue-500 font-bold hover:underline'>1</a>
+                      </div>
+                      <div className='font-bold'>{item.name}</div>
                     </div>
-                    <div className='font-bold'>{item.name}</div>
+                    <div>{item.contact_num}</div>
+                    <div>{item.address_id}</div>
+                    <div className='text-gray-500'>{item.created_at}</div>
+                    <div className='text-gray-500'>{item.updated_at}</div>
                   </div>
-                  <div>{item.contact_num}</div>
-                  <div>{item.address_id}</div>
-                  <div className='text-gray-500'>{item.created_at}</div>
-                  <div className='text-gray-500'>{item.updated_at}</div>
-                </div>
                 ))}
               </div>
             </div>
