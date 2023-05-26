@@ -99,7 +99,7 @@ export default function Workshop() {
                               Delete Workshop ?
                             </h4>
                             <p className='mt-2 text-[15px] leading-relaxed text-gray-500'>
-                              Are you sure you want to delete this appointment?
+                              Are you sure you want to delete this workshop?
                             </p>
                             <div className='items-center gap-2 mt-3 sm:flex'>
                               <button

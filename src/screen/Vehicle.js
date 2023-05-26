@@ -348,7 +348,7 @@ export default function Vehicle() {
                               Delete Vehicle ?
                             </h4>
                             <p className='mt-2 text-[15px] leading-relaxed text-gray-500'>
-                              Are you sure you want to delete this appointment?
+                              Are you sure you want to delete this vehicle?
                             </p>
                             <div className='items-center gap-2 mt-3 sm:flex'>
                               <button
@@ -375,7 +375,7 @@ export default function Vehicle() {
                   </div>
                 </>
               ) : null}
-              
+
               <div className='overflow-auto rounded-lg shadow hidden md:block'>
                 <table className='w-full'>
                   <thead className='bg-gray-50 border-b-2 border-gray-200'>
