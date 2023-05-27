@@ -12,6 +12,83 @@ export default function Report() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [viewMode, setViewMode] = useState(false);
+  const [appointment, setAppointment] = useState(null);
+  const [estimatedPrice, setEstimatedPrice] = useState(null);
+  const [remarks, setRemarks] = useState(null);
+  const [isPaid, setIsPaid] = useState(null);
+  const [status, setStatus] = useState(null);
+  const [finalPrice, setFinalPrice] = useState(null);
+
+  const handleEventChange = (event) => {
+    console.log('event', event.target.name);
+    switch (event.target.name) {
+      case 'appointment':
+        setAppointment(event.target.value);
+        break;
+
+      case 'estimated_price':
+        setEstimatedPrice(event.target.value);
+        break;
+
+      case 'remarks':
+        setRemarks(event.target.value);
+        break;
+
+      case 'is_paid':
+        setIsPaid(event.target.value);
+        break;
+
+      case 'status':
+        setStatus(event.target.value);
+        break;
+
+      case 'final_price':
+        setFinalPrice(event.target.value);
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const resetForm = () => {
+    console.log('resetForm');
+    setAppointment(null);
+    setEstimatedPrice(null);
+    setRemarks(null);
+    setIsPaid(null);
+    setStatus(null);
+    setFinalPrice(null);
+    setSelectedItem(null);
+    setShowModal(false);
+    setViewMode(false);
+  };
+
+  const submitForm = async (event) => {
+    event.preventDefault();
+    const data = {
+      appointment_id: appointment,
+      estimated_price: estimatedPrice,
+      remarks,
+      is_paid: isPaid,
+      status,
+      final_price: finalPrice,
+
+    };
+
+    console.log('data', data);
+    if (selectedItem) {
+      // TODO: call update api
+      await updateTransaction(selectedItem?.id, data);
+    }
+    else {
+      // TODO: call add api
+      await addTransaction(selectedItem?.id, data);
+    }
+    setShowModal(false);
+    // await getAllTransaction();
+  };
 
   const submitTransactionDeletion = async (id) => {
     console.log(id);
@@ -34,6 +111,46 @@ export default function Report() {
       setSelectedItem();
     }
   };
+
+  const updateTransaction = async (id, data) => {
+    try {
+      const response = await axios.post(
+        `/transactions/update?transactionId=${id}`,
+        data,
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          },
+        },
+      );
+      console.log('response transaction', response.data);
+      setSelectedItem();
+      await getAllTransaction();
+    } catch (err) {
+      console.log(err);
+      setSelectedItem();
+    }
+  }
+
+  const addTransaction = async (id, data) => {
+    try {
+      const response = await axios.post(
+        `/transactions`,
+        data,
+        {
+          headers: {
+            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+          },
+        },
+      );
+      console.log('response transaction', response.data);
+
+      await getAllTransaction();
+    } catch (err) {
+      console.log(err);
+
+    }
+  }
 
   const getAllTransaction = async () => {
     try {
@@ -64,9 +181,196 @@ export default function Report() {
         <div className="flex">
           <Sidebar />
           <div className='p-5 w-full'>
-            <h1 className='text-xl mb-2 font-bold'>Transactions Report</h1>
+            <div className='flex justify-between'>
+              <h1 className='text-xl mb-2 font-bold'>Transactions</h1>
+              <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-5 "
+                onClick={() => {
+                  setShowModal(true);
+                }}>
+                Add Transactions
+              </button>
+            </div>
             <div className='overlow-auto rounded-lg shadow'>
-            {showDeleteModal ? (
+
+              {showModal ? (
+                <>
+                  <div className='flex justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
+                    <div className='relative w-full mx-6 md:mx-0 md:w-4/5 lg:w-3/5 my-6 mx-auto max-w-6xl h-5/6 overflow-y-auto'>
+                      <div className='border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none'>
+                        <div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
+                          <h3 className='text-3xl font-semibold'>
+                            {viewMode
+                              ? 'Transaction Detail'
+                              : selectedItem
+                                ? 'Edit Transaction'
+                                : 'Add Transaction'}
+                          </h3>
+                          <button
+                            className='p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
+                            onClick={() => setShowModal(false)}
+                          >
+                            <svg
+                              xmlns='http://www.w3.org/2000/svg'
+                              fill='none'
+                              viewBox='0 0 24 24'
+                              strokeWidth={1.5}
+                              stroke='currentColor'
+                              className='w-6 h-6'
+                            >
+                              <path
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                                d='M6 18L18 6M6 6l12 12'
+                              />
+                            </svg>
+                          </button>
+                        </div>
+
+                        <div className='relative p-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Appointment ID
+                          </label>
+                          <input
+                            type='text'
+                            name='appointment'
+                            id='appointment'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Appointment ID'
+                            onChange={handleEventChange}
+                            value={appointment}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Estimated Price
+                          </label>
+                          <input
+                            type='text'
+                            name='estimated_price'
+                            id='estimated_price'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Estimated Price'
+                            onChange={handleEventChange}
+                            value={estimatedPrice}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Remarks
+                          </label>
+                          <input
+                            type='text'
+                            name='remarks'
+                            id='remarks'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Remarks'
+                            onChange={handleEventChange}
+                            value={remarks}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Paid?
+                          </label>
+                          <input
+                            type='text'
+                            name='is_paid'
+                            id='is_paid'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Paid already?'
+                            onChange={handleEventChange}
+                            value={isPaid}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Status
+                          </label>
+                          <input
+                            type='text'
+                            name='status'
+                            id='status'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Status'
+                            onChange={handleEventChange}
+                            value={status}
+                          />
+                        </div>
+
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Final Price
+                          </label>
+                          <input
+                            type='text'
+                            name='final_price'
+                            id='final_price'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Final Price'
+                            onChange={handleEventChange}
+                            value={finalPrice}
+                          />
+                        </div>
+
+                        <div className='flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b'>
+                          <button
+                            className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
+                            type='button'
+                            onClick={() => resetForm()}
+                          >
+                            Close
+                          </button>
+                          {!viewMode ? (
+                            <button
+                              className='bg-emerald-500 text-white active:bg-emerald-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
+                              type='button'
+                              onClick={submitForm}
+                            >
+
+                              {selectedItem ? (
+                                'Update'
+                              ) : (
+                                'Create'
+                              )}
+
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='opacity-50 fixed inset-0 z-40 bg-black'></div>
+                </>
+              ) : null}
+              {showDeleteModal ? (
                 <>
                   <div className='fixed inset-0 z-10 overflow-y-auto'>
                     <div
@@ -130,6 +434,7 @@ export default function Report() {
                     <tr>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>APPOINTMENT ID</th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>REMARKS</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>ESTIMATED PRICE</th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>PAID STATUS </th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>SERVICES STATUS</th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>GRAND TOTAL </th>
@@ -142,43 +447,55 @@ export default function Report() {
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
                     {transaction.map(item => (
-                    <tr className='bg-white'>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.appointment_id}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.remarks}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.is_paid}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.status}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.final_price}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
-                      <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3">
+                      <tr className='bg-white'>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.appointment_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.remarks}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.estimated_price}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.is_paid}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.status}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.final_price}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3"
+                          onClick={() => {
+                            setShowModal(true);
+                            setSelectedItem(item);
+                            setAppointment(item.appointment_id);
+                            setRemarks(item.remarks);
+                            setEstimatedPrice(item.estimated_price);
+                            setIsPaid(item.is_paid);
+                            setStatus(item.status);
+                            setFinalPrice(item.final_price);
+                          }}>
                           Edit
                         </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => {
-                          setShowDeleteModal(true);
-                          setSelectedItem(item);
-                        }}>
+                          onClick={() => {
+                            setShowDeleteModal(true);
+                            setSelectedItem(item);
+                          }}>
                             Delete
                           </button></td>
-                    </tr>
+                      </tr>
                     ))
                     }
                   </tbody>
                 </table>
               </div>
 
+
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
                 {transaction.map(item => (
-                <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
-                  <div className='flex items-center space-x-2 text-sm'>
-                    <div className='font-bold'>{item.appointment_id}</div>
+                  <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
+                    <div className='flex items-center space-x-2 text-sm'>
+                      <div className='font-bold'>{item.appointment_id}</div>
+                    </div>
+                    <div>{item.remarks}</div>
+                    <div>{item.is_paid}</div>
+                    <div>{item.status}</div>
+                    <div>{item.final_price}</div>
+                    <div className='text-gray-500'>{item.created_at}</div>
+                    <div className='text-gray-500'>{item.updated_at}</div>
                   </div>
-                  <div>{item.remarks}</div>
-                  <div>{item.is_paid}</div>
-                  <div>{item.status}</div>
-                  <div>{item.final_price}</div>
-                  <div className='text-gray-500'>{item.created_at}</div>
-                  <div className='text-gray-500'>{item.updated_at}</div>
-                </div>
                 ))}
               </div>
             </div>
