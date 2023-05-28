@@ -8,43 +8,43 @@ import axios from 'utils/axios'
 
 
 export default function Report() {
-  const [transaction, setTransaction] = useState([]);
+  const [invoice, setInvoice] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [viewMode, setViewMode] = useState(false);
-  const [appointment, setAppointment] = useState(null);
-  const [estimatedPrice, setEstimatedPrice] = useState(null);
-  const [remarks, setRemarks] = useState(null);
-  const [isPaid, setIsPaid] = useState(null);
-  const [status, setStatus] = useState(null);
-  const [finalPrice, setFinalPrice] = useState(null);
+  const [subTotal, setSubTotal] = useState(null);
+  const [grandTotal, setGrandTotal] = useState(null);
+  const [discount, setDiscount] = useState(null);
+  const [serviceCharge, setServiceCharge] = useState(null);
+  const [invoiceNumber, setInvoiceNumber] = useState(null);
+  const [invoiceDate, setInvoiceDate] = useState(null);
 
   const handleEventChange = (event) => {
     console.log('event', event.target.name);
     switch (event.target.name) {
-      case 'appointment':
-        setAppointment(event.target.value);
+      case 'sub_total':
+        setSubTotal(event.target.value);
         break;
 
-      case 'estimated_price':
-        setEstimatedPrice(event.target.value);
+      case 'grand_total':
+        setGrandTotal(event.target.value);
         break;
 
-      case 'remarks':
-        setRemarks(event.target.value);
+      case 'discount':
+        setDiscount(event.target.value);
         break;
 
-      case 'is_paid':
-        setIsPaid(event.target.value);
+      case 'service_charge':
+        setServiceCharge(event.target.value);
         break;
 
-      case 'status':
-        setStatus(event.target.value);
+      case 'invoice_number':
+        setInvoiceNumber(event.target.value);
         break;
 
-      case 'final_price':
-        setFinalPrice(event.target.value);
+      case 'invoice_date':
+        setInvoiceDate(event.target.value);
         break;
 
       default:
@@ -54,12 +54,12 @@ export default function Report() {
 
   const resetForm = () => {
     console.log('resetForm');
-    setAppointment(null);
-    setEstimatedPrice(null);
-    setRemarks(null);
-    setIsPaid(null);
-    setStatus(null);
-    setFinalPrice(null);
+    setSubTotal(null);
+    setGrandTotal(null);
+    setDiscount(null);
+    setServiceCharge(null);
+    setInvoiceNumber(null);
+    setInvoiceDate(null);
     setSelectedItem(null);
     setShowModal(false);
     setViewMode(false);
@@ -68,43 +68,43 @@ export default function Report() {
   const submitForm = async (event) => {
     event.preventDefault();
     const data = {
-      appointment_id: appointment,
-      estimated_price: estimatedPrice,
-      remarks,
-      is_paid: isPaid,
-      status,
-      final_price: finalPrice,
+      sub_total: subTotal,
+      grand_total: grandTotal,
+      discount,
+      service_charge: serviceCharge,
+      invoice_number: invoiceNumber,
+      invoice_date: invoiceDate,
 
     };
 
     console.log('data', data);
     if (selectedItem) {
       // TODO: call update api
-      await updateTransaction(selectedItem?.id, data);
+      await updateInvoice(selectedItem?.id, data);
     }
     else {
       // TODO: call add api
-      await addTransaction(selectedItem?.id, data);
+      await addInvoice(selectedItem?.id, data);
     }
     setShowModal(false);
-    // await getAllTransaction();
+    // await getAllInvoice();
   };
 
-  const submitTransactionDeletion = async (id) => {
+  const submitInvoiceDeletion = async (id) => {
     console.log(id);
     try {
       const response = await axios.get(
-        `/transactions/delete?transactionId=${id}`,
+        `/invoices/delete?invoiceId=${id}`,
         {
           headers: {
             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
           }
         }
       );
-      console.log('response transaction', response.data);
+      console.log('response invoice', response.data);
       setShowDeleteModal(false);
       setSelectedItem();
-      await getAllTransaction();
+      await getAllInvoice();
     } catch (err) {
       console.log(err);
       setShowDeleteModal(false);
@@ -112,10 +112,10 @@ export default function Report() {
     }
   };
 
-  const updateTransaction = async (id, data) => {
+  const updateInvoice = async (id, data) => {
     try {
       const response = await axios.post(
-        `/transactions/update?transactionId=${id}`,
+        `/invoices/update?invoiceId=${id}`,
         data,
         {
           headers: {
@@ -125,17 +125,17 @@ export default function Report() {
       );
       console.log('response transaction', response.data);
       setSelectedItem();
-      await getAllTransaction();
+      await getAllInvoice();
     } catch (err) {
       console.log(err);
       setSelectedItem();
     }
   }
 
-  const addTransaction = async (id, data) => {
+  const addInvoice = async (id, data) => {
     try {
       const response = await axios.post(
-        `/transactions`,
+        `/invoices`,
         data,
         {
           headers: {
@@ -143,28 +143,28 @@ export default function Report() {
           },
         },
       );
-      console.log('response transaction', response.data);
+      console.log('response invoice', response.data);
 
-      await getAllTransaction();
+      await getAllInvoice();
     } catch (err) {
       console.log(err);
 
     }
   }
 
-  const getAllTransaction = async () => {
+  const getAllInvoice = async () => {
     try {
       const response = await axios.get(
-        "/transactions",
+        "/invoices",
         {
           headers: {
             'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
           }
         }
       );
-      console.log('response transaction', response.data);
+      console.log('response invoice', response.data);
       if (response.data.length > 0)
-        setTransaction(response.data);
+        setInvoice(response.data);
     } catch (err) {
       console.log(err);
     }
@@ -172,7 +172,7 @@ export default function Report() {
 
   // Similar to componentDidMount and componentDidUpdate:
   useEffect(() => {
-    getAllTransaction();
+    getAllInvoice();
   }, []);
   return (
     <>
@@ -182,12 +182,12 @@ export default function Report() {
           <Sidebar />
           <div className='p-5 w-full'>
             <div className='flex justify-between'>
-              <h1 className='text-xl mb-2 font-bold'>Transactions</h1>
+              <h1 className='text-xl mb-2 font-bold'>Invoices</h1>
               <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-5 "
                 onClick={() => {
                   setShowModal(true);
                 }}>
-                Add Transactions
+                Add Invoices
               </button>
             </div>
             <div className='overlow-auto rounded-lg shadow'>
@@ -200,10 +200,10 @@ export default function Report() {
                         <div className='flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t'>
                           <h3 className='text-3xl font-semibold'>
                             {viewMode
-                              ? 'Transaction Detail'
+                              ? 'Invoice Detail'
                               : selectedItem
-                                ? 'Edit Transaction'
-                                : 'Add Transaction'}
+                                ? 'Edit Invoice'
+                                : 'Add Invoice'}
                           </h3>
                           <button
                             className='p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none'
@@ -231,17 +231,17 @@ export default function Report() {
                             htmlFor='price'
                             className='block text-sm font-medium text-gray-700 mb-2'
                           >
-                            Appointment ID
+                            Sub Total
                           </label>
                           <input
                             type='text'
-                            name='appointment'
-                            id='appointment'
+                            name='sub_total'
+                            id='sub_total'
                             disabled={viewMode}
                             className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Enter Appointment ID'
+                            placeholder='Enter Sub Total'
                             onChange={handleEventChange}
-                            value={appointment}
+                            value={subTotal}
                           />
                         </div>
 
@@ -250,17 +250,17 @@ export default function Report() {
                             htmlFor='price'
                             className='block text-sm font-medium text-gray-700 mb-2'
                           >
-                            Estimated Price
+                            Grand Total
                           </label>
                           <input
                             type='text'
-                            name='estimated_price'
-                            id='estimated_price'
+                            name='grand_total'
+                            id='grand_total'
                             disabled={viewMode}
                             className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Enter Estimated Price'
+                            placeholder='Enter Grand Total'
                             onChange={handleEventChange}
-                            value={estimatedPrice}
+                            value={grandTotal}
                           />
                         </div>
 
@@ -269,17 +269,17 @@ export default function Report() {
                             htmlFor='price'
                             className='block text-sm font-medium text-gray-700 mb-2'
                           >
-                            Remarks
+                            Discount
                           </label>
                           <input
                             type='text'
-                            name='remarks'
-                            id='remarks'
+                            name='discount'
+                            id='discount'
                             disabled={viewMode}
                             className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Enter Remarks'
+                            placeholder='Enter discount'
                             onChange={handleEventChange}
-                            value={remarks}
+                            value={discount}
                           />
                         </div>
 
@@ -288,17 +288,17 @@ export default function Report() {
                             htmlFor='price'
                             className='block text-sm font-medium text-gray-700 mb-2'
                           >
-                            Paid?
+                            Service Charge
                           </label>
                           <input
                             type='text'
-                            name='is_paid'
-                            id='is_paid'
+                            name='service_charge'
+                            id='service_charge'
                             disabled={viewMode}
                             className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Paid already?'
+                            placeholder='Enter Service Charge'
                             onChange={handleEventChange}
-                            value={isPaid}
+                            value={serviceCharge}
                           />
                         </div>
 
@@ -307,17 +307,17 @@ export default function Report() {
                             htmlFor='price'
                             className='block text-sm font-medium text-gray-700 mb-2'
                           >
-                            Status
+                            Invoice Number
                           </label>
                           <input
                             type='text'
-                            name='status'
-                            id='status'
+                            name='invoice_number'
+                            id='invoice_number'
                             disabled={viewMode}
                             className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Enter Status'
+                            placeholder='Enter Invoice Number'
                             onChange={handleEventChange}
-                            value={status}
+                            value={invoiceNumber}
                           />
                         </div>
 
@@ -326,17 +326,17 @@ export default function Report() {
                             htmlFor='price'
                             className='block text-sm font-medium text-gray-700 mb-2'
                           >
-                            Final Price
+                            Invoice Date
                           </label>
                           <input
                             type='text'
-                            name='final_price'
-                            id='final_price'
+                            name='invoice_date'
+                            id='invoice_date'
                             disabled={viewMode}
                             className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Enter Final Price'
+                            placeholder='Enter Invoice Date'
                             onChange={handleEventChange}
-                            value={finalPrice}
+                            value={invoiceDate}
                           />
                         </div>
 
@@ -398,16 +398,16 @@ export default function Report() {
                           </div>
                           <div className='mt-2 text-center sm:ml-4 sm:text-left'>
                             <h4 className='text-lg font-medium text-gray-800'>
-                              Delete Transaction ?
+                              Delete Invoice ?
                             </h4>
                             <p className='mt-2 text-[15px] leading-relaxed text-gray-500'>
-                              Are you sure you want to delete this vehicle?
+                              Are you sure you want to delete this invoice?
                             </p>
                             <div className='items-center gap-2 mt-3 sm:flex'>
                               <button
                                 className='w-full mt-2 p-2.5 flex-1 text-white bg-red-600 rounded-md outline-none ring-offset-2 ring-red-600 focus:ring-2'
                                 onClick={() =>
-                                  submitTransactionDeletion(selectedItem?.id)
+                                  submitInvoiceDeletion(selectedItem?.id)
                                 }
                               >
                                 Delete
@@ -432,12 +432,12 @@ export default function Report() {
                 <table className='w-full'>
                   <thead className='bg-gray-50 border-b-2 border-gray-200'>
                     <tr>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>APPOINTMENT ID</th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>REMARKS</th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>ESTIMATED PRICE</th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>PAID STATUS </th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>SERVICES STATUS</th>
-                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>GRAND TOTAL </th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'> SUB TOTAL</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>GRAND TOTAL</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'> DISCOUNT</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>SERVICE CHARGE </th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>INVOICE NUMBER</th>
+                      <th className='p-3 text-sm font-semibold tracking-wide text-left'>INVOICE DATE </th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>CREATED AT </th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
                       <th className='p-3 text-sm font-semibold tracking-wide text-left'>EDIT & DELETE </th>
@@ -446,26 +446,26 @@ export default function Report() {
                     </tr>
                   </thead>
                   <tbody className='divide-y divide-gray-100'>
-                    {transaction.map(item => (
+                    {invoice.map(item => (
                       <tr className='bg-white'>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.appointment_id}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.remarks}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.estimated_price}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.is_paid}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.status}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.final_price}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.sub_total}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.grand_total}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.discount}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.service_charge}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.invoice_number}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.invoice_date}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3"
                           onClick={() => {
                             setShowModal(true);
                             setSelectedItem(item);
-                            setAppointment(item.appointment_id);
-                            setRemarks(item.remarks);
-                            setEstimatedPrice(item.estimated_price);
-                            setIsPaid(item.is_paid);
-                            setStatus(item.status);
-                            setFinalPrice(item.final_price);
+                            setSubTotal(item.sub_total);
+                            setGrandTotal(item.grand_total);
+                            setDiscount(item.discount);
+                            setServiceCharge(item.service_charge);
+                            setInvoiceNumber(item.invoice_number);
+                            setInvoiceDate(item.invoice_date);
                           }}>
                           Edit
                         </button><button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
@@ -484,15 +484,16 @@ export default function Report() {
 
 
               <div className='grid grid-cols-1 sm:grid-cols-2  gap-4 md:hidden'>
-                {transaction.map(item => (
+                {invoice.map(item => (
                   <div className='bg-white space-y-3 p-4 rounded-lg shadow'>
                     <div className='flex items-center space-x-2 text-sm'>
-                      <div className='font-bold'>{item.appointment_id}</div>
+                      <div className='font-bold'>{item.sub_total}</div>
                     </div>
-                    <div>{item.remarks}</div>
-                    <div>{item.is_paid}</div>
-                    <div>{item.status}</div>
-                    <div>{item.final_price}</div>
+                    <div>{item.grand_total}</div>
+                    <div>{item.discount}</div>
+                    <div>{item.service_charge}</div>
+                    <div>{item.invoice_number}</div>
+                    <div>{item.invoice_date}</div>
                     <div className='text-gray-500'>{item.created_at}</div>
                     <div className='text-gray-500'>{item.updated_at}</div>
                   </div>
