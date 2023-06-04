@@ -6,7 +6,7 @@ import config from "constants/config";
 
 // Set config defaults when creating the instance
 const axiosInstance = axios.create({
-  baseURL: 'http://pitstop-api.danialarrifin.com/api/',
+  baseURL: 'https://pitstop-api.danialarrifin.com/api/',
   // baseURL:'http://localhost:3000/api/',
 }); 
 
