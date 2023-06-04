@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
 import { HiCog, HiUsers } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
@@ -17,6 +19,21 @@ export default function Vehicle() {
   const [manufacturer, setManufacturer] = useState(null);
   const [imagePath, setImagePath] = useState(null);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAccessToken();
+    getAllVehicle();
+  }, []);
+
+  const checkAccessToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    // no token in local storage, assume user not logged in, kick to login screen
+    if (!token)
+      navigate('/login');
+  }
 
   const handleEventChange = (event) => {
     console.log('event', event.target.name);
@@ -142,7 +159,7 @@ export default function Vehicle() {
         "/vehicles",
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -154,10 +171,6 @@ export default function Vehicle() {
     }
   }
 
-  // Similar to componentDidMount and componentDidUpdate:
-  useEffect(() => {
-    getAllVehicle();
-  }, []);
   return (
     <>
       <Navbar />
@@ -165,10 +178,10 @@ export default function Vehicle() {
         <div className="flex">
           <Sidebar />
           <div className='p-5 w-full'>
-          <div className='flex justify-between'>
+            <div className='flex justify-between'>
               <h1 className='text-xl mb-2 font-bold'>Vehicles</h1>
               <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-5 "
-                 onClick={() => {
+                onClick={() => {
                   setShowModal(true);
                 }}>
                 Add Vehicles
@@ -176,7 +189,7 @@ export default function Vehicle() {
             </div>
             <div className='overlow-auto rounded-lg shadow'>
 
-            {showModal ? (
+              {showModal ? (
                 <>
                   <div className='flex justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none'>
                     <div className='relative w-full mx-6 md:mx-0 md:w-4/5 lg:w-3/5 my-6 mx-auto max-w-6xl h-5/6 overflow-y-auto'>
@@ -399,7 +412,7 @@ export default function Vehicle() {
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3"
-                           onClick={() => {
+                          onClick={() => {
                             setShowModal(true);
                             setSelectedItem(item);
                             setManufacturer(item.manufacturer);
