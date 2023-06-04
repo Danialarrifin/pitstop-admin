@@ -1,4 +1,4 @@
-import { Routes, Route, Redirect } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { PATH_AUTH, PATH_HOME } from './path';
 import LoginScreen from '../screen/Login';
 import RegisterScreen from '../screen/Register';
