@@ -33,6 +33,8 @@ export default function Vehicle() {
     // no token in local storage, assume user not logged in, kick to login screen
     if (!token)
       navigate('/login');
+    else
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
   }
 
   const handleEventChange = (event) => {
@@ -157,11 +159,6 @@ export default function Vehicle() {
     try {
       const response = await axios.get(
         "/vehicles",
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
       );
       console.log('response vehicle', response.data);
       if (response.data.length > 0)
