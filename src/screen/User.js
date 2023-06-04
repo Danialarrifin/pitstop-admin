@@ -16,7 +16,7 @@ export default function User() {
         "/Users",
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );

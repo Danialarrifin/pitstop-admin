@@ -97,7 +97,7 @@ export default function Report() {
         `/invoices/delete?invoiceId=${id}`,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -119,7 +119,7 @@ export default function Report() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -139,7 +139,7 @@ export default function Report() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -158,7 +158,7 @@ export default function Report() {
         "/invoices",
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );

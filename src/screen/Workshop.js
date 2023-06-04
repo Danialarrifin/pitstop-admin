@@ -107,7 +107,7 @@ export default function Workshop() {
         `/workshops/delete?workshopId=${id}`,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -129,7 +129,7 @@ export default function Workshop() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -149,7 +149,7 @@ export default function Workshop() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -168,7 +168,7 @@ export default function Workshop() {
         "/workshops",
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );

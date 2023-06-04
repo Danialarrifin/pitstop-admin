@@ -98,7 +98,7 @@ export default function Vehicle() {
         `/vehicles/delete?vehicleId=${id}`,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -120,7 +120,7 @@ export default function Vehicle() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -140,7 +140,7 @@ export default function Vehicle() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
