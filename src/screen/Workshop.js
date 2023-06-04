@@ -17,6 +17,10 @@ export default function Workshop() {
   const [contactNum, setContactNum] = useState(null);
   const [address, setAddress] = useState(null);
   const [roadAssistance, setRoadAssistance] = useState(null);
+  const [state, setState] = useState(null);
+  const [postcode, setPostcode] = useState(null);
+  const [city, setCity] = useState(null);
+
 
 
 
@@ -34,6 +38,18 @@ export default function Workshop() {
       case 'address':
         setAddress(event.target.value);
         break;
+        
+      case 'state':
+        setState(event.target.value);
+        break; 
+        
+        case 'postcode':
+        setPostcode(event.target.value);
+        break; 
+        
+        case 'city':
+        setCity(event.target.value);
+        break;
 
       case 'road_assistance':
         setRoadAssistance(event.target.value);
@@ -49,6 +65,9 @@ export default function Workshop() {
     setName(null);
     setContactNum(null);
     setAddress(null);
+    setState(null);
+    setPostcode(null);
+    setCity(null);
     setRoadAssistance(null);
     setSelectedItem(null);
     setShowModal(false);
@@ -60,7 +79,11 @@ export default function Workshop() {
     const data = {
       name,
       contact_num: contactNum,
-      address_id: address,
+      address: address,
+      address_id: selectedItem?.address_id,
+      state: state,
+      city: city,
+      postcode: postcode,
       road_assistance_enabled: roadAssistance,
     };
 
@@ -84,7 +107,7 @@ export default function Workshop() {
         `/workshops/delete?workshopId=${id}`,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -106,7 +129,7 @@ export default function Workshop() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -126,7 +149,7 @@ export default function Workshop() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -145,7 +168,7 @@ export default function Workshop() {
         "/workshops",
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -267,6 +290,60 @@ export default function Workshop() {
                             placeholder='Enter Address'
                             onChange={handleEventChange}
                             value={address}
+                          />
+                        </div>
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            State
+                          </label>
+                          <input
+                            type='text'
+                            name='state'
+                            id='state'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Address'
+                            onChange={handleEventChange}
+                            value={state}
+                          />
+                        </div>
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            Postcode
+                          </label>
+                          <input
+                            type='text'
+                            name='postcode'
+                            id='postcode'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Address'
+                            onChange={handleEventChange}
+                            value={postcode}
+                          />
+                        </div>
+                        <div className='relative px-6 pb-6 flex-auto'>
+                          <label
+                            htmlFor='price'
+                            className='block text-sm font-medium text-gray-700 mb-2'
+                          >
+                            City
+                          </label>
+                          <input
+                            type='text'
+                            name='city'
+                            id='city'
+                            disabled={viewMode}
+                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
+                            placeholder='Enter Address'
+                            onChange={handleEventChange}
+                            value={city}
                           />
                         </div>
 
@@ -397,8 +474,8 @@ export default function Workshop() {
                       <tr className='bg-white'>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.name}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.contact_num}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.address_id}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.road_assistance_enabled}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.address + ', ' + item.city + ' ' + item.postcode + ', ' + item.state}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.road_assistance_enabled ? 'TRUE' : "FALSE"}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3"
@@ -407,7 +484,10 @@ export default function Workshop() {
                             setSelectedItem(item);
                             setName(item.name);
                             setContactNum(item.contact_num);
-                            setAddress(item.address_id);
+                            setAddress(item.address);
+                            setState(item.state);
+                            setPostcode(item.postcode);
+                            setCity(item.city);
                             setRoadAssistance(item.road_assistance_enabled);
                           }}>
                           Edit

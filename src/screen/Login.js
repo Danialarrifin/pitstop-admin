@@ -17,8 +17,9 @@ export default function Login() {
 
       // set access token if exists
       if(response.data?.access_token) {
-        axios.defaults.headers.common.Authorization = `Bearer ${response?.data?.access_token}`;
-        localStorage.setItem('token', JSON.stringify(response?.data?.access_token));
+        const token = response?.data?.access_token
+        axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+        localStorage.setItem('token', response?.data?.access_token);
       }
 
       setSuccess(true);

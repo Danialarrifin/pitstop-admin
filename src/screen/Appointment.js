@@ -85,7 +85,7 @@ export default function Appointment() {
         `/appointments/delete?appointmentId=${id}`,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
@@ -107,7 +107,7 @@ export default function Appointment() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -127,7 +127,7 @@ export default function Appointment() {
         data,
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           },
         },
       );
@@ -146,7 +146,7 @@ export default function Appointment() {
         "/appointments",
         {
           headers: {
-            'Authorization': `Bearer ${JSON.parse(localStorage.getItem('token'))}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
