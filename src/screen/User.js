@@ -1,24 +1,38 @@
 import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
 import { HiCog, HiUsers } from "react-icons/hi";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
-import React, {useEffect, useState} from 'react';
 import axios from 'utils/axios'
 
 
 export default function User() {
   const [user, setUser] = useState([]);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAccessToken();
+    getAllUser();
+  }, []);
+
+  const checkAccessToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    // no token in local storage, assume user not logged in, kick to login screen
+    if (!token)
+      navigate('/login');
+      else
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } 
+  
   const getAllUser = async () => {
     try {
       const response = await axios.get(
         "/Users",
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
       );
       console.log('response user', response.data);
       if (response.data.length > 0)
