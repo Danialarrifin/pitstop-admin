@@ -5,6 +5,8 @@ import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
 import axios from 'utils/axios'
+import { useNavigate } from "react-router-dom";
+
 
 export default function Appointment() {
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +19,25 @@ export default function Appointment() {
   const [vehicle, setVehicle] = useState();
   const [service, setService] = useState();
   const [status, setStatus] = useState();
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAccessToken();
+    getAllAppointment();
+  }, []);
+
+  const checkAccessToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    // no token in local storage, assume user not logged in, kick to login screen
+    if (!token)
+      navigate('/login');
+      else
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } 
 
   const handleEventChange = (event) => {
     console.log('event', event.target.name);
@@ -144,11 +165,6 @@ export default function Appointment() {
     try {
       const response = await axios.get(
         "/appointments",
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
       );
       console.log('response appointment', response.data);
       if (response.data.length > 0)
