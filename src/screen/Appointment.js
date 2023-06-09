@@ -35,9 +35,9 @@ export default function Appointment() {
     // no token in local storage, assume user not logged in, kick to login screen
     if (!token)
       navigate('/login');
-      else
+    else
       axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-  } 
+  }
 
   const handleEventChange = (event) => {
     console.log('event', event.target.name);
@@ -153,7 +153,7 @@ export default function Appointment() {
         },
       );
       console.log('response appointment', response.data);
-   
+
       await getAllAppointment();
     } catch (err) {
       console.log(err);
@@ -188,7 +188,7 @@ export default function Appointment() {
             <div className='flex justify-between'>
               <h1 className='text-xl mb-2 font-bold'>Appointments</h1>
               <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-5 "
-                 onClick={() => {
+                onClick={() => {
                   setShowModal(true);
                 }}>
                 Add Appointments
