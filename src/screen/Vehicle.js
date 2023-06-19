@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
 import { HiCog, HiUsers } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'

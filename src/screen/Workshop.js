@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { } from 'react-icons/ai'
 import { } from "react-icons/hi";
 import Footer from 'components/Footer'
@@ -21,7 +22,23 @@ export default function Workshop() {
   const [postcode, setPostcode] = useState(null);
   const [city, setCity] = useState(null);
 
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    checkAccessToken();
+    getAllWorkshop();
+  }, []);
+
+  const checkAccessToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    // no token in local storage, assume user not logged in, kick to login screen
+    if (!token)
+      navigate('/login');
+      else
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } 
 
 
   const handleEventChange = (event) => {
@@ -166,11 +183,6 @@ export default function Workshop() {
     try {
       const response = await axios.get(
         "/workshops",
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
       );
       console.log('response workshop', response.data);
       if (response.data.length > 0)

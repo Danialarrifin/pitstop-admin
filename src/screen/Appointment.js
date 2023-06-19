@@ -5,6 +5,8 @@ import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
 import axios from 'utils/axios'
+import { useNavigate } from "react-router-dom";
+
 
 export default function Appointment() {
   const [showModal, setShowModal] = useState(false);
@@ -17,6 +19,25 @@ export default function Appointment() {
   const [vehicle, setVehicle] = useState();
   const [service, setService] = useState();
   const [status, setStatus] = useState();
+
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAccessToken();
+    getAllAppointment();
+  }, []);
+
+  const checkAccessToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    // no token in local storage, assume user not logged in, kick to login screen
+    if (!token)
+      navigate('/login');
+    else
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  }
 
   const handleEventChange = (event) => {
     console.log('event', event.target.name);
@@ -132,7 +153,7 @@ export default function Appointment() {
         },
       );
       console.log('response appointment', response.data);
-   
+
       await getAllAppointment();
     } catch (err) {
       console.log(err);
@@ -144,11 +165,6 @@ export default function Appointment() {
     try {
       const response = await axios.get(
         "/appointments",
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
       );
       console.log('response appointment', response.data);
       if (response.data.length > 0)
@@ -172,7 +188,7 @@ export default function Appointment() {
             <div className='flex justify-between'>
               <h1 className='text-xl mb-2 font-bold'>Appointments</h1>
               <button class="bg-blue-500 hover:bg-blue-700 text-black font-bold py-2 px-4 rounded mb-5 "
-                 onClick={() => {
+                onClick={() => {
                   setShowModal(true);
                 }}>
                 Add Appointments
@@ -420,9 +436,9 @@ export default function Appointment() {
                     {appointment.map(item => (
                       <tr className='bg-white'>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.date}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.time_slot_id}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.vehicle_id}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.service_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.start_time + ' - ' + item.end_time}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.model}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.service_name}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                           <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-gray-800 bg-gray-200  rounded-lg bg-opacity-40'>{item.status}</span>
                         </td>

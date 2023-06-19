@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { AiFillCalendar, AiFillCar } from 'react-icons/ai'
 import { HiCog, HiUsers } from "react-icons/hi";
 import Footer from 'components/Footer'
@@ -19,6 +20,25 @@ export default function Report() {
   const [serviceCharge, setServiceCharge] = useState(null);
   const [invoiceNumber, setInvoiceNumber] = useState(null);
   const [invoiceDate, setInvoiceDate] = useState(null);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    checkAccessToken();
+    getAllInvoice();
+  }, []);
+
+  const checkAccessToken = async () => {
+    const token = localStorage.getItem('token');
+    console.log('token', token);
+
+    // no token in local storage, assume user not logged in, kick to login screen
+    if (!token)
+      navigate('/login');
+      else
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
+  } 
+
 
   const handleEventChange = (event) => {
     console.log('event', event.target.name);
@@ -156,11 +176,6 @@ export default function Report() {
     try {
       const response = await axios.get(
         "/invoices",
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
       );
       console.log('response invoice', response.data);
       if (response.data.length > 0)
