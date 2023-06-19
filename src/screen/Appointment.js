@@ -436,9 +436,9 @@ export default function Appointment() {
                     {appointment.map(item => (
                       <tr className='bg-white'>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.date}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.time_slot_id}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.vehicle_id}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.service_id}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.start_time + ' - ' + item.end_time}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.model}</td>
+                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.service_name}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>
                           <span className='p-1.5 text-xs font-medium uppercase tracker-wider text-gray-800 bg-gray-200  rounded-lg bg-opacity-40'>{item.status}</span>
                         </td>

@@ -21,6 +21,7 @@ const Navbar = ({ current = 'Sales' }) => {
 
   const navigate = useNavigate();
   const handleNavbar=()=>{
+    localStorage.removeItem('token');
     navigate("/login");
   }
   return (
