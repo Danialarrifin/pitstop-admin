@@ -3,9 +3,38 @@ import { HiCog, HiUsers } from "react-icons/hi";
 import Footer from 'components/Footer'
 import Sidebar from 'components/Sidebar'
 import Navbar from 'components/Navbar'
+import axios from 'utils/axios'
+import React, { useEffect, useState } from 'react';
+
 
 
 export default function Dashboard() {
+  const [dashboard, setDashboard] = useState(null);
+
+
+
+  const getAllDashboard = async () => {
+    try {
+      const response = await axios.get(
+        "/users/dashboard",
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      );
+      console.log('response dashboard', response.data);
+      if (response.data)
+        setDashboard(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getAllDashboard();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -30,7 +59,7 @@ export default function Dashboard() {
                       Total users
                     </div>
                     <div className="mt-1 text-3xl font-semibold text-gray-900">
-                      12,00
+                      {dashboard?.user}
                     </div>
                   </div>
                 </div>
@@ -41,7 +70,7 @@ export default function Dashboard() {
                       Workshops
                     </div>
                     <div className="mt-1 text-3xl font-semibold text-gray-900">
-                      90
+                      {dashboard?.workshops}
                     </div>
                   </div>
                 </div>
@@ -52,7 +81,7 @@ export default function Dashboard() {
                       Vehicles
                     </div>
                     <div className="mt-1 text-3xl font-semibold text-gray-900">
-                      500
+                      {dashboard?.vehicles}
                     </div>
                   </div>
                 </div>
@@ -63,7 +92,7 @@ export default function Dashboard() {
                       Appointments
                     </div>
                     <div className="mt-1 text-3xl font-semibold text-gray-900">
-                      150
+                      {dashboard?.appointments}
                     </div>
                   </div>
                 </div>

@@ -22,6 +22,7 @@ const Navbar = ({ current = 'Sales' }) => {
   const navigate = useNavigate();
   const handleNavbar=()=>{
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     navigate("/login");
   }
   return (
@@ -72,7 +73,7 @@ const Navbar = ({ current = 'Sales' }) => {
                         <span className='sr-only'>Open user menu</span>
                           <div className='relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'>
                             <span className='font-medium text-gray-600 dark:text-gray-300'>
-                              {('Danial Ariffin')
+                            {(JSON.parse(localStorage.getItem('user')).name)
                                 .split(' ')
                                 .map((n) => n[0])
                                 .join('')
@@ -162,7 +163,7 @@ const Navbar = ({ current = 'Sales' }) => {
                 <div className='flex-shrink-0'>
                   <div className='relative inline-flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600'>
                       <span className='font-medium text-gray-600 dark:text-gray-300'>
-                        {('Danial Ariffin')
+                        {(JSON.parse(localStorage.getItem('user')).name)
                           .split(' ')
                           .map((n) => n[0])
                           .join('')
@@ -172,7 +173,7 @@ const Navbar = ({ current = 'Sales' }) => {
                 </div>
                 <div className='ml-3'>
                   <div className='text-base font-medium leading-none text-white'>
-                    {'Danial Ariffin'}
+                    {(JSON.parse(localStorage.getItem('user')).name)}
                   </div>
                   <div className='text-sm font-medium leading-none text-gray-400'>
                     {'test@email.com'}
