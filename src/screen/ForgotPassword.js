@@ -13,7 +13,7 @@ export default function ForgotPassword() {
                 <div>
                     <img
                         className='mx-auto h-12 w-auto'
-                        src='https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600'
+                        src="/icons/logo.png"
                         alt='Your Company'
                     />
                     <h2 className='my-6 text-center text-3xl font-bold tracking-tight'>
@@ -25,7 +25,7 @@ export default function ForgotPassword() {
                             Remember your password?
                             <a
                                 href='login'
-                                className='font-medium text-indigo-600 hover:text-indigo-500 pl-1'
+                                className='font-medium text-red-600 hover:text-red-500 pl-1'
                             >
                                 Login Here
                             </a>
@@ -46,7 +46,7 @@ export default function ForgotPassword() {
                                     type="email"
                                     autoComplete="email"
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-red-600 sm:text-sm sm:leading-6"
                                 />
                             </div>
                         </div>
@@ -54,7 +54,7 @@ export default function ForgotPassword() {
                         <div>
                             <button
                                 type="submit"
-                                className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                className="flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                                 onClick={handleForgotPassword}>
                                 Reset Your Password
                             </button>
