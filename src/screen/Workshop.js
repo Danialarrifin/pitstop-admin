@@ -358,26 +358,6 @@ export default function Workshop() {
                             value={city}
                           />
                         </div>
-
-                        <div className='relative px-6 pb-6 flex-auto'>
-                          <label
-                            htmlFor='price'
-                            className='block text-sm font-medium text-gray-700 mb-2'
-                          >
-                            Road Assistance
-                          </label>
-                          <input
-                            type='text'
-                            name='road_assistance'
-                            id='road_assistance'
-                            disabled={viewMode}
-                            className='relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-gray-700'
-                            placeholder='Enter Yes or No'
-                            onChange={handleEventChange}
-                            value={roadAssistance}
-                          />
-                        </div>
-
                         <div className='flex items-center justify-end p-6 border-t border-solid border-slate-200 rounded-b'>
                           <button
                             className='text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150'
@@ -487,7 +467,6 @@ export default function Workshop() {
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.name}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.contact_num}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.address + ', ' + item.city + ' ' + item.postcode + ', ' + item.state}</td>
-                        <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.road_assistance_enabled ? 'TRUE' : "FALSE"}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.created_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'>{item.updated_at}</td>
                         <td className='p-3 text-sm text-gray-700 whitespace-nowrap'><button class="bg-yellow-500 hover:bg-yellow-700 text-black font-bold py-2 px-4 rounded mr-3"
