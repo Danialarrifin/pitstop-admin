@@ -454,7 +454,6 @@ export default function Workshop() {
                       <th className='p-3 w-10 text-sm font-semibold tracking-wide text-left'>NAME</th>
                       <th className='p-3 w-10 text-sm font-semibold tracking-wide text-left'>CONTACT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>ADDRESS </th>
-                      <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>ROAD ASSISTANCE </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>CREATED AT</th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>UPDATED AT </th>
                       <th className='p-3 w-5 text-sm font-semibold tracking-wide text-left'>EDIT & DELETE </th>
